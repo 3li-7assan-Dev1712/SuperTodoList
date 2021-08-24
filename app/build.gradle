@@ -83,6 +83,10 @@ dependencies {
 
     // DataStore
     implementation "androidx.datastore:datastore-preferences:$dataStoreVersion"
+
+    // Reflection
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.5.21"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 
 kapt {
