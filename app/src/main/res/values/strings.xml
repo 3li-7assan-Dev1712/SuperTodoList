@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SuperTodoList</string>
+    <string name="example_task">Example task</string>
+    <string name="important_indicator_sign">an image to indicator that the task is important</string>
 </resources>
