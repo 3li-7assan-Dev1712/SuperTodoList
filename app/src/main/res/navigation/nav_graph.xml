@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/taskFragment">
+
+    <fragment
+        android:id="@+id/taskFragment"
+        android:name="com.example.supertodolist.ui.task.TaskFragment"
+        android:label="tasks_fragment"
+        tools:layout="@layout/tasks_fragment" />
+</navigation>

@@ -1,8 +1,8 @@
-package com.example.supertodolist
+package com.example.supertodolist.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
+import com.example.supertodolist.R
 
 class MainActivity : AppCompatActivity() {
     val name : String = "Ali"
