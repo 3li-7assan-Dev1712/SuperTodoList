@@ -2,6 +2,7 @@ package com.example.supertodolist.ui.task
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,9 @@ class TasksAdapter  : ListAdapter<Task, TasksAdapter.TaskViewHolder>(DiffCallbac
         fun bind (task: Task){
             binding.apply {
                 taskName.text = task.name
+                checkTaskDone.isChecked = task.completed
+                importantTaskSign.isVisible = task.important
+                taskName.paint.isStrikeThruText = task.completed
             }
         }
     }
@@ -25,8 +29,8 @@ class TasksAdapter  : ListAdapter<Task, TasksAdapter.TaskViewHolder>(DiffCallbac
     }
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
-        val currentItem = getItem(position)
-        holder.bind(currentItem)
+        val currentTask = getItem(position)
+        holder.bind(currentTask)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Task> () {
