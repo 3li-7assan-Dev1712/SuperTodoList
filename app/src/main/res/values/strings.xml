@@ -3,4 +3,10 @@
     <string name="example_task">Example task</string>
     <string name="important_indicator_sign">an image to indicator that the task is important</string>
     <string name="task_name">Task name</string>
+    <string name="search">Search</string>
+    <string name="sort_by_name">Sort by name</string>
+    <string name="sort">Sort</string>
+    <string name="sort_by_created_date">Sort by created date</string>
+    <string name="hide_completed">Hide completed</string>
+    <string name="delete_all_the_completed_task">Delete all the completed task</string>
 </resources>

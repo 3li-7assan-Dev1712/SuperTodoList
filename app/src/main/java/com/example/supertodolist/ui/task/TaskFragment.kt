@@ -1,9 +1,9 @@
 package com.example.supertodolist.ui.task
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
@@ -12,6 +12,7 @@ import com.example.supertodolist.R
 import com.example.supertodolist.databinding.FragmentAddEditTaskBinding
 import com.example.supertodolist.databinding.TasksFragmentBinding
 import com.example.supertodolist.ui.TaskViewModel
+import com.example.supertodolist.util.onQueryTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -35,5 +36,40 @@ class TaskFragment : Fragment (R.layout.tasks_fragment) {
         viewModel.tasks.observe(viewLifecycleOwner) {
             tasksAdapter.submitList(it)
         }
+        setHasOptionsMenu(true)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_fragment_task, menu)
+
+        val searchItem = menu.findItem(R.id.action_search)
+        val searchView = searchItem.actionView as SearchView
+        searchView.onQueryTextChanged {
+            // update search query
+            viewModel.searchQuery.value = it
+
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId){
+            R.id.action_sort_by_name -> {
+                true
+            }
+            R.id.action_sort_by_date_created-> {
+                true
+            }
+            R.id.action_hide_completed_task-> {
+                item.isChecked = !item.isChecked
+                true
+            }
+            R.id.action_delete_all_completed_task -> {
+
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+
+
     }
 }
