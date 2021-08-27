@@ -10,6 +10,7 @@ interface TaskDao {
     @Query ("SELECT * FROM task_table WHERE (completed != :hideCompleted OR completed = 0) AND name LIKE '%' || :searchQuery || '%' ORDER BY important DESC, name")
     fun getTasksSortedByName(searchQuery: String, hideCompleted: Boolean) : Flow<List<Task>>
 
+    // OR completed here is to get also all the uncompleted tasks
     @Query ("SELECT * FROM task_table WHERE (completed != :hideCompleted OR completed = 0) AND name LIKE '%' || :searchQuery || '%' ORDER BY important DESC, created")
     fun getTasksSortedByDateCreated(searchQuery: String, hideCompleted: Boolean) : Flow<List<Task>>
 

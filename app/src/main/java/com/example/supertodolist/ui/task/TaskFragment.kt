@@ -9,6 +9,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.supertodolist.R
+import com.example.supertodolist.data.PreferencesManager
+import com.example.supertodolist.data.Task
 import com.example.supertodolist.databinding.FragmentAddEditTaskBinding
 import com.example.supertodolist.databinding.TasksFragmentBinding
 import com.example.supertodolist.ui.SortOrder
@@ -17,14 +19,21 @@ import com.example.supertodolist.util.onQueryTextChanged
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class TaskFragment : Fragment (R.layout.tasks_fragment) {
+class TaskFragment : Fragment (R.layout.tasks_fragment) , TasksAdapter.OnItemClickListener{
 
     private val viewModel : TaskViewModel by viewModels()
 
+    override fun onItemClick(task: Task) {
+        viewModel.onTaskSelected(task)
+    }
+
+    override fun onCheckBoxClicked(task: Task, checkedState: Boolean) {
+        viewModel.onCheckBoxClicked(task, checkedState)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val tasksAdapter = TasksAdapter()
+        val tasksAdapter = TasksAdapter(this)
         val binding = TasksFragmentBinding.bind(view)
         binding.apply {
             tasksRecycler.apply {
@@ -48,6 +57,7 @@ class TaskFragment : Fragment (R.layout.tasks_fragment) {
         searchView.onQueryTextChanged {
             // update search query
             viewModel.searchQuery.value = it
+
 
         }
     }

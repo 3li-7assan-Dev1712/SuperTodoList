@@ -9,10 +9,30 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.supertodolist.data.Task
 import com.example.supertodolist.databinding.TaskItemBinding
 
-class TasksAdapter  : ListAdapter<Task, TasksAdapter.TaskViewHolder>(DiffCallback()) {
+class TasksAdapter (private val listener: OnItemClickListener) : ListAdapter<Task, TasksAdapter.TaskViewHolder>(DiffCallback()) {
 
-    class TaskViewHolder(private val binding: TaskItemBinding) : RecyclerView.ViewHolder(binding.root){
+    inner class TaskViewHolder(private val binding: TaskItemBinding) : RecyclerView.ViewHolder(binding.root){
 
+        init {
+            binding.apply {
+                root.setOnClickListener{
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION){
+                        val task = getItem(position)
+                        listener.onItemClick(task)
+                    }
+                }
+
+
+                checkTaskDone.setOnClickListener{
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION){
+                        val task = getItem(position)
+                        listener.onCheckBoxClicked(task, checkTaskDone.isChecked)
+                    }
+                }
+            }
+        }
         fun bind (task: Task){
             binding.apply {
                 taskName.text = task.name
@@ -39,6 +59,14 @@ class TasksAdapter  : ListAdapter<Task, TasksAdapter.TaskViewHolder>(DiffCallbac
 
         override fun areContentsTheSame(oldItem: Task, newItem: Task)
             = oldItem == newItem
+
+    }
+
+    interface OnItemClickListener{
+
+        fun onItemClick(task: Task)
+
+        fun onCheckBoxClicked(task: Task, checkedState: Boolean)
 
     }
 }
