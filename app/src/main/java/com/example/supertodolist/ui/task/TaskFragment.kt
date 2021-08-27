@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.supertodolist.R
 import com.example.supertodolist.databinding.FragmentAddEditTaskBinding
 import com.example.supertodolist.databinding.TasksFragmentBinding
+import com.example.supertodolist.ui.SortOrder
 import com.example.supertodolist.ui.TaskViewModel
 import com.example.supertodolist.util.onQueryTextChanged
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,13 +55,16 @@ class TaskFragment : Fragment (R.layout.tasks_fragment) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId){
             R.id.action_sort_by_name -> {
+                viewModel.sortOrder.value = SortOrder.BY_NAME
                 true
             }
             R.id.action_sort_by_date_created-> {
+                viewModel.sortOrder.value = SortOrder.BY_DATE
                 true
             }
             R.id.action_hide_completed_task-> {
                 item.isChecked = !item.isChecked
+                viewModel.hideCompleted.value = item.isChecked
                 true
             }
             R.id.action_delete_all_completed_task -> {
