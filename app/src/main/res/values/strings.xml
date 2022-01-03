@@ -9,4 +9,6 @@
     <string name="sort_by_created_date">Sort by created date</string>
     <string name="hide_completed">Hide completed</string>
     <string name="delete_all_the_completed_task">Delete all the completed task</string>
+    <string name="fab_des">"fab to add trask "</string>
+    <string name="date_created">Created %s</string>
 </resources>

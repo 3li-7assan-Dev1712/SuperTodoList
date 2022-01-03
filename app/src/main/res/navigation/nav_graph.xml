@@ -9,5 +9,20 @@
         android:id="@+id/taskFragment"
         android:name="com.example.supertodolist.ui.task.TaskFragment"
         android:label="tasks_fragment"
-        tools:layout="@layout/tasks_fragment" />
+        tools:layout="@layout/tasks_fragment" >
+        <action
+            android:id="@+id/action_taskFragment_to_addEditTaskFragment"
+            app:destination="@id/addEditTaskFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addEditTaskFragment"
+        android:name="com.example.supertodolist.ui.addedittask.AddEditTaskFragment"
+        android:label="fragment_add_edit_task"
+        tools:layout="@layout/fragment_add_edit_task" >
+        <argument
+            android:name="task"
+            app:argType="com.example.supertodolist.data.Task"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 </navigation>
