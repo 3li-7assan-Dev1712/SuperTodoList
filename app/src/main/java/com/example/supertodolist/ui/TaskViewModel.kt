@@ -39,8 +39,8 @@ class TaskViewModel @ViewModelInject constructor(
         taskDao.update(task.copy( completed = checkedState ))
     }
 
-    fun onTaskSelected(task: Task) {
-
+    fun onTaskSelected(task: Task) = viewModelScope.launch {
+        tasksEventChanel.send(TasksEvent.NavigateToEditTask(task))
     }
 
     fun onTaskSwiped(task: Task) = viewModelScope.launch {
@@ -63,8 +63,15 @@ class TaskViewModel @ViewModelInject constructor(
             taskDao.insert(task)
         }
     }
+    fun onAddTaskFabClick() {
+        viewModelScope.launch {
+            tasksEventChanel.send(TasksEvent.NavigateToAddTask)
+        }
+    }
     sealed class TasksEvent {
         data class ShowUndoTaskMessage(val task: Task): TasksEvent()
+        data class NavigateToEditTask(val task: Task): TasksEvent()
+        object NavigateToAddTask: TasksEvent()
     }
 
 }

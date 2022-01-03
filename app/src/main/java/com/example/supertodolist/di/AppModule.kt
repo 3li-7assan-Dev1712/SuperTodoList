@@ -9,6 +9,10 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import javax.inject.Singleton
 
+/**
+ *
+ */
+
 @Module
 @InstallIn(ApplicationComponent::class)
 object AppModule {
@@ -20,6 +24,7 @@ object AppModule {
     ) =
         Room.databaseBuilder(app, TaskDatabase::class.java, "task_database")
             .fallbackToDestructiveMigration().build()
+
     @Provides
     fun provideTaskDao(db: TaskDatabase) = db.taskDao()
 

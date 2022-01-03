@@ -10,7 +10,7 @@ import com.example.supertodolist.data.TaskDao
 class AddEditTaskViewModel @ViewModelInject constructor(
     val taskDao: TaskDao,
     @Assisted private val state: SavedStateHandle
-): ViewModel(){
+): ViewModel() {
 
     val task = state.get<Task>("task")
     var taskName = state.get<String>("taskName") ?: task?.name ?: ""
