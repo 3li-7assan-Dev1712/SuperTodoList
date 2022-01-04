@@ -6,6 +6,8 @@ import androidx.lifecycle.*
 import com.example.supertodolist.data.PreferencesManager
 import com.example.supertodolist.data.Task
 import com.example.supertodolist.data.TaskDao
+import com.example.supertodolist.ui.addedittask.ADD_TASK_OK
+import com.example.supertodolist.ui.addedittask.EDIT_TASK_OK
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
@@ -68,9 +70,30 @@ class TaskViewModel @ViewModelInject constructor(
             tasksEventChanel.send(TasksEvent.NavigateToAddTask)
         }
     }
+
+    fun onAddEditResult(result: Int) {
+        when (result) {
+            ADD_TASK_OK -> {
+                showConfirmationMessage("task added")
+            }
+            EDIT_TASK_OK -> {
+                showConfirmationMessage("task updated")
+            }
+        }
+    }
+
+    private fun showConfirmationMessage(confirmationMsg: String) {
+        viewModelScope.launch {
+            tasksEventChanel.send(TasksEvent.ShowConfirmationMsg(msg = confirmationMsg))
+        }
+
+    }
+
+
     sealed class TasksEvent {
         data class ShowUndoTaskMessage(val task: Task): TasksEvent()
         data class NavigateToEditTask(val task: Task): TasksEvent()
+        data class ShowConfirmationMsg(val msg: String): TasksEvent()
         object NavigateToAddTask: TasksEvent()
     }
 

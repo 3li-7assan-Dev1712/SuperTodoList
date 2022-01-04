@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -41,6 +42,10 @@ class TaskFragment : Fragment(R.layout.tasks_fragment), TasksAdapter.OnItemClick
         super.onViewCreated(view, savedInstanceState)
         val tasksAdapter = TasksAdapter(this)
         val binding = TasksFragmentBinding.bind(view)
+        setFragmentResultListener("add_edit_task_request") {_, bundle ->
+            val result = bundle.getInt("add_edit_task_result_flag")
+            viewModel.onAddEditResult(result)
+        }
         binding.apply {
             tasksRecycler.apply {
                 layoutManager = LinearLayoutManager(requireContext())
@@ -87,6 +92,9 @@ class TaskFragment : Fragment(R.layout.tasks_fragment), TasksAdapter.OnItemClick
                         val action =
                             TaskFragmentDirections.actionTaskFragmentToAddEditTaskFragment(event.task, "Edit Task")
                         findNavController().navigate(action)
+                    }
+                    is TaskViewModel.TasksEvent.ShowConfirmationMsg -> {
+                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_LONG).show()
                     }
                 }.exhaustive
             }
