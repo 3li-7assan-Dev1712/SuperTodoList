@@ -14,11 +14,10 @@ handling the configuration changes, and process death.
 - Dependency Injection with Dagger2/Hilt</br>
 
 <b>Screenshots</b></br>
- <img src="https://github.com/3li-7assan-Dev1712/SuperTodoList/blob/master/1.png" alt="SuperTodoList Screenshot">
- <img src="https://github.com/3li-7assan-Dev1712/SuperTodoList/blob/master/2.png" alt="SuperTodoList Screenshot">
- <img src="https://github.com/3li-7assan-Dev1712/SuperTodoList/blob/master/3.png" alt="SuperTodoList Screenshot">
- <img src="https://github.com/3li-7assan-Dev1712/SuperTodoList/blob/master/4.png" alt="SuperTodoList Screenshot">
- <img src="https://github.com/3li-7assan-Dev1712/SuperTodoList/blob/master/5.png" alt="SuperTodoList Screenshot">
- <img src="https://github.com/3li-7assan-Dev1712/SuperTodoList/blob/master/VID.mp4" alt="SuperTodoList Video description"></br>
+ <img src="https://github.com/3li-7assan-Dev1712/SuperTodoList/blob/master/1.jpg" alt="SuperTodoList Screenshot">
+ <img src="https://github.com/3li-7assan-Dev1712/SuperTodoList/blob/master/2.jpg" alt="SuperTodoList Screenshot">
+ <img src="https://github.com/3li-7assan-Dev1712/SuperTodoList/blob/master/3.jpg" alt="SuperTodoList Screenshot">
+ <img src="https://github.com/3li-7assan-Dev1712/SuperTodoList/blob/master/4.jpg" alt="SuperTodoList Screenshot">
+ <img src="https://github.com/3li-7assan-Dev1712/SuperTodoList/blob/master/5.jpg" alt="SuperTodoList Screenshot">
 
 
