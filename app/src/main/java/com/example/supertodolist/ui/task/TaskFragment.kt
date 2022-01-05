@@ -28,6 +28,8 @@ import kotlinx.coroutines.flow.collect
 @AndroidEntryPoint
 class TaskFragment : Fragment(R.layout.tasks_fragment), TasksAdapter.OnItemClickListener {
 
+    private lateinit var searchView: SearchView
+
     private val viewModel: TaskViewModel by viewModels()
 
     override fun onItemClick(task: Task) {
@@ -46,6 +48,7 @@ class TaskFragment : Fragment(R.layout.tasks_fragment), TasksAdapter.OnItemClick
             val result = bundle.getInt("add_edit_task_result_flag")
             viewModel.onAddEditResult(result)
         }
+
         binding.apply {
             tasksRecycler.apply {
                 layoutManager = LinearLayoutManager(requireContext())
@@ -96,6 +99,10 @@ class TaskFragment : Fragment(R.layout.tasks_fragment), TasksAdapter.OnItemClick
                     is TaskViewModel.TasksEvent.ShowConfirmationMsg -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_LONG).show()
                     }
+                    TaskViewModel.TasksEvent.ShowDeleteAllCompletedMessage -> {
+                        val action = TaskFragmentDirections.actionGlobalDeleteAllCompletedFragmentDialog()
+                        findNavController().navigate(action)
+                    }
                 }.exhaustive
             }
         }
@@ -110,7 +117,12 @@ class TaskFragment : Fragment(R.layout.tasks_fragment), TasksAdapter.OnItemClick
         inflater.inflate(R.menu.menu_fragment_task, menu)
 
         val searchItem = menu.findItem(R.id.action_search)
-        val searchView = searchItem.actionView as SearchView
+        val pendingQuery = viewModel.searchQuery.value
+        if (pendingQuery != null && pendingQuery.isNotEmpty()) {
+            searchItem.expandActionView()
+            searchView.setQuery(pendingQuery, false)
+        }
+        searchView = searchItem.actionView as SearchView
         searchView.onQueryTextChanged {
             // update search query
             viewModel.searchQuery.value = it
@@ -135,12 +147,17 @@ class TaskFragment : Fragment(R.layout.tasks_fragment), TasksAdapter.OnItemClick
                 true
             }
             R.id.action_delete_all_completed_task -> {
-
+                viewModel.onDeleteAllCompletedClick()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
 
 
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        searchView.setOnQueryTextListener(null)
     }
 }

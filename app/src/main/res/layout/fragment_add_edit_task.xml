@@ -39,5 +39,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_check_mark" />
+        android:src="@drawable/ic_check_mark"
+        android:contentDescription="@string/nav_app_bar_open_drawer_description" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

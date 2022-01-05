@@ -30,6 +30,8 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
                 Log.e(TAG, "error reading data: ${it.message}")
                 emit(emptyPreferences())
             } else {
+                // if the exception is not input output exception throw the exception and
+                    // do not let the app continue.
                 throw it
             }
         }

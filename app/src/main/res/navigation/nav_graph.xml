@@ -28,4 +28,8 @@
             android:name="title"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/deleteAllCompletedFragmentDialog"
+        android:name="com.example.supertodolist.ui.deleteallcompleted.DeleteAllCompletedFragmentDialog"
+        android:label="DeleteAllCompletedFragmentDialog" /><action android:id="@+id/action_global_deleteAllCompletedFragmentDialog" app:destination="@id/deleteAllCompletedFragmentDialog"/>
 </navigation>

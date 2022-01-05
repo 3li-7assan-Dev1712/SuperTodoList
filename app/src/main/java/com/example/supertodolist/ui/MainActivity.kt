@@ -9,9 +9,13 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.supertodolist.R
 import dagger.hilt.android.AndroidEntryPoint
 
+/**
+ *this is responsible for hosting the nav host fragment, using the navigation
+ * graph it will handle all the fragments.
+ */
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    val name: String = "Ali"
+
     private lateinit var navController: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
