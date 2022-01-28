@@ -24,7 +24,7 @@ class AddEditTaskFragment: Fragment(R.layout.fragment_add_edit_task) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val binding = FragmentAddEditTaskBinding.bind(view)
+        val binding = FrfagmentAddEditTaskBinding.bind(view)
         binding.apply {
             editTextTaskName.setText(viewModel.taskName)
             checkBoxImportant.isChecked = viewModel.taskImportance
@@ -59,6 +59,7 @@ class AddEditTaskFragment: Fragment(R.layout.fragment_add_edit_task) {
                     is AddEditTaskViewModel.AddEditTaskEvents.ShowInvalidMessage -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_LONG).show()
                     }
+
                 }.exhaustive
             }
         }

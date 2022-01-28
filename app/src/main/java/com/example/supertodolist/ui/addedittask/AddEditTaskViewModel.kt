@@ -72,10 +72,10 @@ class AddEditTaskViewModel @ViewModelInject constructor(
         set(value) {
             field = value
             state.set("taskImportance", value)
-        }
-
-    sealed class AddEditTaskEvents {
+        } sealed class AddEditTaskEvents {
         data class ShowInvalidMessage(val msg: String) : AddEditTaskEvents()
         data class NavigateBackWithResult(val result: Int) : AddEditTaskEvents()
     }
+
+
 }

@@ -16,13 +16,14 @@ import javax.inject.Singleton
 
 
 private const val TAG = "PreferencesManager"
+
 data class FilterPreferences (val sortOrder: SortOrder, val hideCompleted: Boolean)
 
 
 @Singleton
 class PreferencesManager @Inject constructor(@ApplicationContext context: Context) {
 
-    val dataStore = context.createDataStore("user_preferences")
+    private val dataStore = context.createDataStore("user_preferences")
 
     val preferencesFlow = dataStore.data
         .catch {

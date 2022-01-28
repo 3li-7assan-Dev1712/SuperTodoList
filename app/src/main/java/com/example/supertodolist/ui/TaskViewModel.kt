@@ -9,18 +9,19 @@ import com.example.supertodolist.data.TaskDao
 import com.example.supertodolist.ui.addedittask.ADD_TASK_OK
 import com.example.supertodolist.ui.addedittask.EDIT_TASK_OK
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
+/**
+ * This is the ViewModel class to apply the MVVM architecture
+ */
 class TaskViewModel @ViewModelInject constructor(
     private val taskDao: TaskDao,
     private val preferencesManager: PreferencesManager,
     @Assisted private val state: SavedStateHandle
-        ) : ViewModel()
-{
+) : ViewModel() {
 
 
     private val tasksEventChanel = Channel<TasksEvent>()
@@ -29,16 +30,24 @@ class TaskViewModel @ViewModelInject constructor(
     val searchQuery = state.getLiveData("searchQuery", "")
     private val preferencesFlow = preferencesManager.preferencesFlow
 
-    private val taskFlow = combine(searchQuery.asFlow(),
-    preferencesFlow) { query, filterPreferences ->
-        Pair (query, filterPreferences)
+    /**
+     * Flow is a kotlin language feature to apply to the concept of reactive programming
+     * which means that keep track of a specific source of data and listen to any changes
+     * then react accordingly.
+     *
+     */
+    private val taskFlow = combine(
+        searchQuery.asFlow(),
+        preferencesFlow
+    ) { query, filterPreferences ->
+        Pair(query, filterPreferences)
     }.flatMapLatest { (query, filter) ->
         taskDao.getTasks(query, filter.sortOrder, filter.hideCompleted)
     }
     val tasks = taskFlow.asLiveData()
 
     fun onCheckBoxClicked(task: Task, checkedState: Boolean) = viewModelScope.launch {
-        taskDao.update(task.copy( completed = checkedState ))
+        taskDao.update(task.copy(completed = checkedState))
     }
 
     fun onTaskSelected(task: Task) = viewModelScope.launch {
@@ -50,21 +59,24 @@ class TaskViewModel @ViewModelInject constructor(
         tasksEventChanel.send(TasksEvent.ShowUndoTaskMessage(task))
     }
 
-    fun updateSortOrder (sortOrder: SortOrder) {
+    fun updateSortOrder(sortOrder: SortOrder) {
         viewModelScope.launch {
             preferencesManager.updateSortOrder(sortOrder)
         }
     }
+
     fun updateHideCompleted(hideCompleted: Boolean) {
         viewModelScope.launch {
             preferencesManager.updateHideCompleted(hideCompleted)
         }
     }
+
     fun onUndoDeleteTaskClick(task: Task) {
         viewModelScope.launch {
             taskDao.insert(task)
         }
     }
+
     fun onAddTaskFabClick() {
         viewModelScope.launch {
             tasksEventChanel.send(TasksEvent.NavigateToAddTask)
@@ -95,13 +107,14 @@ class TaskViewModel @ViewModelInject constructor(
 
 
     sealed class TasksEvent {
-        data class ShowUndoTaskMessage(val task: Task): TasksEvent()
-        data class NavigateToEditTask(val task: Task): TasksEvent()
-        data class ShowConfirmationMsg(val msg: String): TasksEvent()
+        data class ShowUndoTaskMessage(val task: Task) : TasksEvent()
+        data class NavigateToEditTask(val task: Task) : TasksEvent()
+        data class ShowConfirmationMsg(val msg: String) : TasksEvent()
         object ShowDeleteAllCompletedMessage : TasksEvent()
 
-        object NavigateToAddTask: TasksEvent()
+        object NavigateToAddTask : TasksEvent()
     }
 
 }
+
 enum class SortOrder { BY_DATE, BY_NAME }

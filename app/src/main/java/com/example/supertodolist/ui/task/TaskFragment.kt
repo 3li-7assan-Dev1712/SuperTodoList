@@ -28,14 +28,17 @@ import kotlinx.coroutines.flow.collect
 @AndroidEntryPoint
 class TaskFragment : Fragment(R.layout.tasks_fragment), TasksAdapter.OnItemClickListener {
 
+    // we make this global property, so we can access in all the file
     private lateinit var searchView: SearchView
 
     private val viewModel: TaskViewModel by viewModels()
 
+    // listen to the user interaction and delegate the work to the ViewModel
     override fun onItemClick(task: Task) {
         viewModel.onTaskSelected(task)
     }
 
+    // listen to the user interaction then let the ViewModel do the business logic.
     override fun onCheckBoxClicked(task: Task, checkedState: Boolean) {
         viewModel.onCheckBoxClicked(task, checkedState)
     }
@@ -44,7 +47,7 @@ class TaskFragment : Fragment(R.layout.tasks_fragment), TasksAdapter.OnItemClick
         super.onViewCreated(view, savedInstanceState)
         val tasksAdapter = TasksAdapter(this)
         val binding = TasksFragmentBinding.bind(view)
-        setFragmentResultListener("add_edit_task_request") {_, bundle ->
+        setFragmentResultListener("add_edit_task_request") { _, bundle ->
             val result = bundle.getInt("add_edit_task_result_flag")
             viewModel.onAddEditResult(result)
         }
@@ -77,39 +80,70 @@ class TaskFragment : Fragment(R.layout.tasks_fragment), TasksAdapter.OnItemClick
             tasksAdapter.submitList(it)
         }
 
+        // all business logic we delegate it the ViewModel which will in tern
+        // tell the fragment what to do, and we collect every command from the ViewModel
+        // below:
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.tasksEvent.collect { event ->
                 when (event) {
+                    /*
+                     * when the user click undo in the SnackBar the fragment say for the ViewModel
+                     * the user clicks in the UNDO button, the ViewModel judge what to do
+                     * then tell the fragment about it which we collect it via Channel using
+                     * Flow Kotlin's feature.
+                     */
                     is TaskViewModel.TasksEvent.ShowUndoTaskMessage -> {
                         Snackbar.make(requireView(), "task deleted", Snackbar.LENGTH_LONG)
                             .setAction("UNDO") {
                                 viewModel.onUndoDeleteTaskClick(event.task)
                             }.show()
                     }
+                    /*
+                    when the user click to Add task fab in the screen, the fragment tell the ViewModel
+                    about that then the ViewModel tell the fragment the action that should be taken.
+                     */
                     TaskViewModel.TasksEvent.NavigateToAddTask -> {
                         val action =
-                            TaskFragmentDirections.actionTaskFragmentToAddEditTaskFragment(null, "New Task")
+                            TaskFragmentDirections.actionTaskFragmentToAddEditTaskFragment(
+                                null,
+                                "New Task"
+                            )
                         findNavController().navigate(action)
                     }
+                    /*
+                    When the user click to a specific task intending to edit it, the fragment delegate that
+                    to the ViewModel, then the ViewModel tell the fragment to do this:
+                     */
                     is TaskViewModel.TasksEvent.NavigateToEditTask -> {
                         val action =
-                            TaskFragmentDirections.actionTaskFragmentToAddEditTaskFragment(event.task, "Edit Task")
+                            TaskFragmentDirections.actionTaskFragmentToAddEditTaskFragment(
+                                event.task,
+                                "Edit Task"
+                            )
                         findNavController().navigate(action)
                     }
+                    /*
+                    Confirmation message should be appeared when the user click to (delete all completed)
+                    from the main menu at the top of the screen, so the fragment tell the ViewModel about
+                    that then the ViewModel make the decision to be applied as below:
+                     */
                     is TaskViewModel.TasksEvent.ShowConfirmationMsg -> {
                         Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_LONG).show()
                     }
                     TaskViewModel.TasksEvent.ShowDeleteAllCompletedMessage -> {
-                        val action = TaskFragmentDirections.actionGlobalDeleteAllCompletedFragmentDialog()
+                        val action =
+                            TaskFragmentDirections.actionGlobalDeleteAllCompletedFragmentDialog()
                         findNavController().navigate(action)
                     }
                 }.exhaustive
             }
         }
 
+        // when the user click on the fab, tell the ViewModel about it to make the decision
         binding.fabAddTask.setOnClickListener {
             viewModel.onAddTaskFabClick()
         }
+        // this method will let our fragment has its own custom menu :)
         setHasOptionsMenu(true)
     }
 
@@ -119,7 +153,10 @@ class TaskFragment : Fragment(R.layout.tasks_fragment), TasksAdapter.OnItemClick
         val searchItem = menu.findItem(R.id.action_search)
         val pendingQuery = viewModel.searchQuery.value
         if (pendingQuery != null && pendingQuery.isNotEmpty()) {
+            // expandActionView make the search item on the menu appear just like when the user
+            // click to make a search
             searchItem.expandActionView()
+            // write the string that was written before in the searchView
             searchView.setQuery(pendingQuery, false)
         }
         searchView = searchItem.actionView as SearchView
@@ -133,6 +170,11 @@ class TaskFragment : Fragment(R.layout.tasks_fragment), TasksAdapter.OnItemClick
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            /* all the work is delegated to the ViewModel to have a better architecture and
+            separation of concern the fragment here is just responsible for receiving inputs from
+            the user -tell as what the user click in the menu-, then the logic and the rest of
+            the flow is the ViewModel's responsibility.
+             */
             R.id.action_sort_by_name -> {
                 viewModel.updateSortOrder(SortOrder.BY_NAME)
                 true
@@ -158,6 +200,7 @@ class TaskFragment : Fragment(R.layout.tasks_fragment), TasksAdapter.OnItemClick
 
     override fun onDestroyView() {
         super.onDestroyView()
+        // remove the listener from the SearchView when its fragment is destroyed.
         searchView.setOnQueryTextListener(null)
     }
 }
